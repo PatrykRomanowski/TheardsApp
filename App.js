@@ -5,11 +5,39 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 
+import {
+  useFonts,
+  Inter_100Thin,
+  Inter_200ExtraLight,
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold,
+  Inter_900Black,
+} from "@expo-google-fonts/inter";
+
 import MainScreen from "./Screens/MainScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  let [fontsLoaded, fontError] = useFonts({
+    Inter_100Thin,
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    Inter_900Black,
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#0A0A0B" />
@@ -33,7 +61,7 @@ export default function App() {
               headerShown: true,
               headerTitleStyle: {
                 fontWeight: "300",
-                fontFamily: "Arial",
+                fontFamily: "Inter_400Regular",
                 fontSize: 16,
               },
               headerTitleAlign: "center",
