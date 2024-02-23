@@ -16,8 +16,18 @@ const BackgroundForTheardsButtons = (props) => {
 
   return (
     <View style={styles.container}>
-      <TheardsButton id={1} actualOption={actualOption} onPress={onPress} />
-      <TheardsButton id={2} actualOption={actualOption} onPress={onPress} />
+      <TheardsButton
+        id={1}
+        actualOption={actualOption}
+        title="THEARDS INSIDE"
+        onPress={onPress}
+      />
+      <TheardsButton
+        id={2}
+        actualOption={actualOption}
+        title="THEARDS OUTSIDE"
+        onPress={onPress}
+      />
     </View>
   );
 };

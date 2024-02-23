@@ -18,7 +18,9 @@ import TheardsDescription from "../components/UI/TheardsDescription";
 import BackgroundForTheardsButtons from "../components/UI/BackgroungForTheardsButtons";
 import BackgroundForResult from "../components/UI/BackgroundForResult";
 
-const theardsData = new Theards();
+let theardsData = new Theards();
+const theardsDataInside = new Theards();
+const theardsDataOutside = new Theards();
 const screenHeight = Dimensions.get("window").height;
 
 const MainScreen = () => {
@@ -50,16 +52,44 @@ const MainScreen = () => {
   };
 
   useEffect(() => {
-    theardsData.addTheards("M");
-    theardsData.addTheards("G");
+    theardsDataInside.addTheards("M");
+    theardsDataInside.addTheards("G");
+    theardsDataInside.addTheards("MT");
+    theardsDataInside.addSize("M", "M10");
+    theardsDataInside.addSize("M", "M12");
+    theardsDataInside.addSize("G", "G1/8");
+    theardsDataInside.addSize("MT", "M10");
+    theardsDataInside.addPitch("M", "M12", "2.0", 10.5, 10.35, 10.65);
+    theardsDataInside.addPitch("M", "M12", "2.2", 10.3, 10.15, 10.45);
+    theardsDataInside.addPitch("M", "M12", "2.5", 10.1, 9.95, 10.25);
+    theardsDataInside.addPitch("M", "M10", "1.5", 8.5, 8.35, 8.65);
+    theardsDataInside.addPitch("G", "G1/8", "11W", 8.5, 8.35, 8.65);
+    theardsDataInside.addPitch("MT", "M10", "1.5", 8.5, 8.35, 8.65);
 
-    theardsData.addSize("M", "M10");
-    theardsData.addSize("M", "M12");
-    theardsData.addPitch("M", "M12", "2.0", 10.5, 10.35, 10.65);
-    theardsData.addPitch("M", "M12", "2.2", 10.3, 10.15, 10.45);
-    theardsData.addPitch("M", "M12", "2.5", 10.1, 9.95, 10.25);
-    theardsData.addPitch("M", "M10", "1.5", 8.5, 8.35, 8.65);
+    theardsDataOutside.addTheards("M");
+    theardsDataOutside.addTheards("G");
+    theardsDataOutside.addTheards("MT");
+    theardsDataOutside.addSize("M", "M2");
+    theardsDataOutside.addSize("M", "M4");
+    theardsDataOutside.addSize("G", "G1/8");
+    theardsDataOutside.addSize("MT", "M10");
+    theardsDataOutside.addPitch("M", "M2", "0.2", 1.8, 1.75, 1.85);
+    theardsDataOutside.addPitch("M", "M2", "0.3", 1.7, 1.6, 1.8);
+    theardsDataOutside.addPitch("M", "M2", "2.5", 10.1, 9.95, 10.25);
+    theardsDataOutside.addPitch("M", "M4", "1.5", 8.5, 8.35, 8.65);
+    theardsDataOutside.addPitch("G", "G1/8", "11W", 8.5, 8.35, 8.65);
+    theardsDataOutside.addPitch("MT", "M10", "1.5", 8.5, 8.35, 8.65);
 
+    theardsData = theardsDataInside;
+  }, []);
+
+  useEffect(() => {
+    setData([]);
+    if (actualOption === 1) {
+      theardsData = theardsDataInside;
+    } else {
+      theardsData = theardsDataOutside;
+    }
     for (let i = 0; i < 3; i++) {
       const x = "";
       setData((data) => [...data, x]);
@@ -71,15 +101,11 @@ const MainScreen = () => {
       }
     }
 
-    for (let i = 0; i < 7; i++) {
-      const x = "XXX";
-      setData((data) => [...data, x]);
-    }
     for (let i = 0; i < 3; i++) {
       const x = "";
       setData((data) => [...data, x]);
     }
-  }, []);
+  }, [actualOption]);
 
   useEffect(() => {
     setTheardSize([]);
@@ -282,7 +308,11 @@ const MainScreen = () => {
           <BackgroundForTheardsButtons
             actualOptionHandler={actualOptionHandler}
           />
-          <BackgroundForResult data={showDate} index={currentIndexForPitch} />
+          <BackgroundForResult
+            data={showDate}
+            unit={unit}
+            index={currentIndexForPitch}
+          />
         </View>
         <View style={styles.parametersContainer}>
           <TheardsDescription text="SELECT THEARD TYPE" />
@@ -393,9 +423,6 @@ const styles = StyleSheet.create({
   triangleContainer: {
     width: "100vw",
     alignItems: "center",
-    // flex: 5,
-    borderColor: "red",
-    borderWidth: 1,
   },
 
   opacity100: {

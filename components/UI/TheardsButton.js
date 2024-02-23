@@ -25,7 +25,7 @@ const TheardsButton = (props) => {
           <Image style={styles.img} source={theardOutside} />
         )}
       </View>
-      <Text style={styles.buttonText}>Button</Text>
+      <Text style={styles.buttonText}>{props.title}</Text>
     </Pressable>
   );
 };
@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    width: "70%",
+    width: "50%",
   },
   buttonActive: {
     backgroundColor: "#1B84E6",
   },
   imgContainer: {
     width: "30%",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   img: {
     width: "80%",

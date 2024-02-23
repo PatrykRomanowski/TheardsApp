@@ -4,6 +4,7 @@ import { StyleSheet, View, Text } from "react-native";
 const HoleDiameterText = (props) => {
   console.log(props.data);
   console.log(props.index);
+  console.log(props.unit);
   if (props.data.length === 0) {
     return;
   }
@@ -12,6 +13,7 @@ const HoleDiameterText = (props) => {
       <View style={styles.textContainer}>
         <Text style={styles.description}>{props.description}</Text>
         <Text style={styles.result}>{props.data[props.index - 1].hole} </Text>
+        <Text style={styles.description}>[{props.unit}]</Text>
       </View>
     );
   } else {
@@ -21,6 +23,7 @@ const HoleDiameterText = (props) => {
         <Text style={styles.result}>
           {props.data[props.index - 1].min} - {props.data[props.index - 1].max}
         </Text>
+        <Text style={styles.description}>[{props.unit}]</Text>
       </View>
     );
   }
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "50%",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 6,
   },
 
   description: {

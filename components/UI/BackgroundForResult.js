@@ -16,12 +16,14 @@ const BackgroundForResult = (props) => {
         index={props.index}
         description="DRILL SIZE"
         type="drillHole"
+        unit={props.unit}
       />
       <HoleDiameterText
         index={props.index}
         data={props.data}
         description="HOLE AFTER THEARDING"
         type="holeAfterThreading"
+        unit={props.unit}
       />
     </View>
   );
