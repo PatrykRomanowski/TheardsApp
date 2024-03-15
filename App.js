@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { Provider, useDispatch } from "react-redux";
 
 import { NavigationContainer } from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Ionicons } from "@expo/vector-icons";
+// import { Ionicons } from "@expo/vector-icons";
+import SettingIcon from "./components/UI/SettingIcon";
 
 import {
   useFonts,
@@ -18,11 +20,16 @@ import {
   Inter_900Black,
 } from "@expo-google-fonts/inter";
 
+import store from "./storage";
+import { modalActions } from "./storage/modal-context";
+
 import MainScreen from "./Screens/MainScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // const dispatch = useDispatch();
+
   let [fontsLoaded, fontError] = useFonts({
     Inter_100Thin,
     Inter_200ExtraLight,
@@ -39,7 +46,7 @@ export default function App() {
     return null;
   }
   return (
-    <>
+    <Provider store={store}>
       <StatusBar barStyle="light-content" backgroundColor="#0A0A0B" />
       <NavigationContainer>
         <Stack.Navigator
@@ -48,9 +55,7 @@ export default function App() {
               backgroundColor: "#0A0A0B",
             },
 
-            headerRight: () => (
-              <Ionicons name="settings-outline" size={24} color="white" />
-            ),
+            headerRight: () => <SettingIcon />,
             headerTintColor: "white",
           }}
         >
@@ -69,7 +74,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </Provider>
   );
 }
 

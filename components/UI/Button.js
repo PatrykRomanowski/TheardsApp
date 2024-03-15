@@ -5,7 +5,7 @@ const Button = ({ pressed }) => {
   return (
     <View style={styles.buttonContainer}>
       <Pressable>
-        <Text>XD</Text>
+        <Text>XD2</Text>
       </Pressable>
     </View>
   );

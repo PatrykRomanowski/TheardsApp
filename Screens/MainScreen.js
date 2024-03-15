@@ -9,9 +9,16 @@ import {
   StatusBar,
   Dimensions,
   Button,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
+import { useSelector } from "react-redux";
+
 import { useState, useEffect } from "react";
 import Theards from "../classes/theards";
+
+import { theardsDataInsideForMetric } from "../data/theardsData";
+import { theardsDataOutsideForMetric } from "../data/theardsData";
 
 import Triangle from "../components/UI/Triangle";
 import TheardsDescription from "../components/UI/TheardsDescription";
@@ -19,11 +26,11 @@ import BackgroundForTheardsButtons from "../components/UI/BackgroungForTheardsBu
 import BackgroundForResult from "../components/UI/BackgroundForResult";
 
 let theardsData = new Theards();
-const theardsDataInside = new Theards();
+// const theardsDataInside = new Theards();
 const theardsDataOutside = new Theards();
 const screenHeight = Dimensions.get("window").height;
 
-const MainScreen = () => {
+const MainScreen = (props) => {
   const [currentIndex, setCurrentIndex] = useState(1); // Użyj stanu, aby przechowywać aktualny indeks
   const [actualOption, setActualOption] = useState(1); // aktualny rodzaj gwintu, wewnetrzny lub zaewnętrzny
   const [currentIndexForSize, setCurrentIndexForSize] = useState(1);
@@ -33,6 +40,11 @@ const MainScreen = () => {
   const [theardSize, setTheardSize] = useState([]);
   const [theardPitch, setTheardPitch] = useState([]);
   const [showDate, setShowData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const modalStatus = useSelector(
+    (state) => state.modalContext.showModalForUnitOfMeasure
+  );
 
   const screenWidth = Dimensions.get("window").width;
 
@@ -43,52 +55,28 @@ const MainScreen = () => {
   const scrollViewRefForSize = useRef(null);
   const scrollViewRefForPitch = useRef(null);
 
-  const test = () => {
-    console.log("test");
+  const closeModal = () => {
+    setIsModalVisible(false);
+    console.log(modalStatus);
   };
 
   const actualOptionHandler = (optionSelected) => {
     setActualOption(optionSelected);
   };
+  useEffect(() => {
+    console.log(modalStatus);
+  }, [modalStatus]);
 
   useEffect(() => {
-    theardsDataInside.addTheards("M");
-    theardsDataInside.addTheards("G");
-    theardsDataInside.addTheards("MT");
-    theardsDataInside.addSize("M", "M10");
-    theardsDataInside.addSize("M", "M12");
-    theardsDataInside.addSize("G", "G1/8");
-    theardsDataInside.addSize("MT", "M10");
-    theardsDataInside.addPitch("M", "M12", "2.0", 10.5, 10.35, 10.65);
-    theardsDataInside.addPitch("M", "M12", "2.2", 10.3, 10.15, 10.45);
-    theardsDataInside.addPitch("M", "M12", "2.5", 10.1, 9.95, 10.25);
-    theardsDataInside.addPitch("M", "M10", "1.5", 8.5, 8.35, 8.65);
-    theardsDataInside.addPitch("G", "G1/8", "11W", 8.5, 8.35, 8.65);
-    theardsDataInside.addPitch("MT", "M10", "1.5", 8.5, 8.35, 8.65);
-
-    theardsDataOutside.addTheards("M");
-    theardsDataOutside.addTheards("G");
-    theardsDataOutside.addTheards("MT");
-    theardsDataOutside.addSize("M", "M2");
-    theardsDataOutside.addSize("M", "M4");
-    theardsDataOutside.addSize("G", "G1/8");
-    theardsDataOutside.addSize("MT", "M10");
-    theardsDataOutside.addPitch("M", "M2", "0.2", 1.8, 1.75, 1.85);
-    theardsDataOutside.addPitch("M", "M2", "0.3", 1.7, 1.6, 1.8);
-    theardsDataOutside.addPitch("M", "M2", "2.5", 10.1, 9.95, 10.25);
-    theardsDataOutside.addPitch("M", "M4", "1.5", 8.5, 8.35, 8.65);
-    theardsDataOutside.addPitch("G", "G1/8", "11W", 8.5, 8.35, 8.65);
-    theardsDataOutside.addPitch("MT", "M10", "1.5", 8.5, 8.35, 8.65);
-
-    theardsData = theardsDataInside;
+    theardsData = theardsDataInsideForMetric;
   }, []);
 
   useEffect(() => {
     setData([]);
     if (actualOption === 1) {
-      theardsData = theardsDataInside;
+      theardsData = theardsDataInsideForMetric;
     } else {
-      theardsData = theardsDataOutside;
+      theardsData = theardsDataOutsideForMetric;
     }
     for (let i = 0; i < 3; i++) {
       const x = "";
@@ -304,6 +292,32 @@ const MainScreen = () => {
   return (
     <>
       <View style={styles.mainContainer}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity
+                style={styles.modalButtonExit}
+                onPress={closeModal}
+              >
+                <Text style={{ color: "white" }}>X</Text>
+              </TouchableOpacity>
+              <Text style={styles.textModal}>Wpisz numer strony</Text>
+            </View>
+          </View>
+        </Modal>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("click");
+            setIsModalVisible(true);
+          }}
+        >
+          <Text style={styles.text1}>Xd</Text>
+        </TouchableOpacity>
         <View style={styles.resoultContainer}>
           <BackgroundForTheardsButtons
             actualOptionHandler={actualOptionHandler}
@@ -411,6 +425,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 52,
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Przezroczyste tło
   },
 
   container: {
