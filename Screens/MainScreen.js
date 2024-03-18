@@ -12,18 +12,25 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useState, useEffect } from "react";
 import Theards from "../classes/theards";
 
 import { theardsDataInsideForMetric } from "../data/theardsData";
+import { theardsDataInsideForInch } from "../data/theardsData";
 import { theardsDataOutsideForMetric } from "../data/theardsData";
+import { theardsDataOutsideForInch } from "../data/theardsData";
 
 import Triangle from "../components/UI/Triangle";
 import TheardsDescription from "../components/UI/TheardsDescription";
 import BackgroundForTheardsButtons from "../components/UI/BackgroungForTheardsButtons";
 import BackgroundForResult from "../components/UI/BackgroundForResult";
+import BackgroundForSelectedUnit from "../components/UI/BackgroundForSelectedUnit";
+import ModalDescription from "../components/UI/ModalDescription";
+import OkButtonModal from "../components/UI/OkButtonModal";
+
+import { modalActions } from "../storage/modal-context";
 
 let theardsData = new Theards();
 // const theardsDataInside = new Theards();
@@ -33,6 +40,7 @@ const screenHeight = Dimensions.get("window").height;
 const MainScreen = (props) => {
   const [currentIndex, setCurrentIndex] = useState(1); // Użyj stanu, aby przechowywać aktualny indeks
   const [actualOption, setActualOption] = useState(1); // aktualny rodzaj gwintu, wewnetrzny lub zaewnętrzny
+  const [actualUnit, setActualUnit] = useState("MM");
   const [currentIndexForSize, setCurrentIndexForSize] = useState(1);
   const [currentIndexForPitch, setCurrentIndexForPitch] = useState(1);
   const [data, setData] = useState([]);
@@ -45,6 +53,9 @@ const MainScreen = (props) => {
   const modalStatus = useSelector(
     (state) => state.modalContext.showModalForUnitOfMeasure
   );
+  const actualOptionUnit = useSelector((state) => state.unitContext.actualUnit);
+
+  const dispatch = useDispatch();
 
   const screenWidth = Dimensions.get("window").width;
 
@@ -56,16 +67,25 @@ const MainScreen = (props) => {
   const scrollViewRefForPitch = useRef(null);
 
   const closeModal = () => {
-    setIsModalVisible(false);
-    console.log(modalStatus);
+    dispatch(modalActions.closeModal());
   };
 
   const actualOptionHandler = (optionSelected) => {
     setActualOption(optionSelected);
   };
+
+  const actualUnitOfMeasureHandler = (optionSelected) => {
+    setActualUnit(optionSelected);
+  };
+
   useEffect(() => {
-    console.log(modalStatus);
-  }, [modalStatus]);
+    if (actualOptionUnit === 1) {
+      setUnit("MM");
+    }
+    if (actualOptionUnit === 2) {
+      setUnit("INCH");
+    }
+  }, [actualOptionUnit]);
 
   useEffect(() => {
     theardsData = theardsDataInsideForMetric;
@@ -73,10 +93,21 @@ const MainScreen = (props) => {
 
   useEffect(() => {
     setData([]);
-    if (actualOption === 1) {
+    if (actualOption === 1 && actualOptionUnit === 1) {
       theardsData = theardsDataInsideForMetric;
-    } else {
+      console.log(actualOptionUnit);
+    }
+    if (actualOption === 1 && actualOptionUnit === 2) {
+      theardsData = theardsDataInsideForInch;
+      console.log(actualOptionUnit);
+    }
+    if (actualOption === 2 && actualOptionUnit === 1) {
       theardsData = theardsDataOutsideForMetric;
+      console.log(actualOptionUnit);
+    }
+    if (actualOption === 2 && actualOptionUnit === 2) {
+      theardsData = theardsDataOutsideForInch;
+      console.log(actualOptionUnit);
     }
     for (let i = 0; i < 3; i++) {
       const x = "";
@@ -93,7 +124,7 @@ const MainScreen = (props) => {
       const x = "";
       setData((data) => [...data, x]);
     }
-  }, [actualOption]);
+  }, [actualOption, actualOptionUnit]);
 
   useEffect(() => {
     setTheardSize([]);
@@ -145,12 +176,6 @@ const MainScreen = (props) => {
                 for (const pitchData in theardsData[item][element].theardsSize[
                   size
                 ][pitch]) {
-                  console.log(pitchData);
-                  console.log(
-                    theardsData[item][element].theardsSize[size][pitch][
-                      pitchData
-                    ].max
-                  );
                   const min =
                     theardsData[item][element].theardsSize[size][pitch][
                       pitchData
@@ -169,7 +194,7 @@ const MainScreen = (props) => {
                     max,
                     hole,
                   };
-                  console.log(newItem);
+
                   setShowData((showDate) => [...showDate, newItem]);
 
                   setTheardPitch((theardPitch) => [...theardPitch, pitchData]);
@@ -295,29 +320,26 @@ const MainScreen = (props) => {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={isModalVisible}
+          visible={modalStatus}
           onRequestClose={closeModal}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
+              <ModalDescription text="SELECT UNIT" />
+              <BackgroundForSelectedUnit
+                actualUnitOfMeasureHandler={actualUnitOfMeasureHandler}
+                actualOptionUnit={actualUnit}
+              />
               <TouchableOpacity
                 style={styles.modalButtonExit}
                 onPress={closeModal}
               >
-                <Text style={{ color: "white" }}>X</Text>
+                <OkButtonModal title="OK" />
               </TouchableOpacity>
-              <Text style={styles.textModal}>Wpisz numer strony</Text>
             </View>
           </View>
         </Modal>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("click");
-            setIsModalVisible(true);
-          }}
-        >
-          <Text style={styles.text1}>Xd</Text>
-        </TouchableOpacity>
+
         <View style={styles.resoultContainer}>
           <BackgroundForTheardsButtons
             actualOptionHandler={actualOptionHandler}
@@ -385,8 +407,6 @@ const MainScreen = (props) => {
             ) : null}
           </View>
         </View>
-
-        {/* <Button onPress={test} title="Click Me" /> */}
       </View>
     </>
   );
@@ -416,6 +436,13 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
 
+  modalButtonExit: {
+    display: "flex",
+    width: "100%",
+    alignSelf: "center",
+    marginTop: 100,
+  },
+
   resoultContainer: {
     height: screenHeight * 0.5, // 40% wysokości ekranu
   },
@@ -431,7 +458,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Przezroczyste tło
+    backgroundColor: "rgba(0, 0, 0, 0.95)", // Przezroczyste tło
   },
 
   container: {

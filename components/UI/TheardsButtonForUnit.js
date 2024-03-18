@@ -1,31 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, View, StyleSheet, Text, Image } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+
+import { unitActions } from "../../storage/actualUnit-context";
 
 const theardInside = require("../../assets/T1.png");
 const theardOutside = require("../../assets/T2.png");
 
-const TheardsButton = (props) => {
+const TheardsButtonForUnit = (props) => {
+  const actualOptionUnit = useSelector((state) => state.unitContext.actualUnit);
+  const [actualUnit, setActualUnit] = useState(actualOptionUnit);
+  const dispatch = useDispatch();
   const onPressButtonHandler = () => {
-    props.onPress(props.id);
+    if (props.id === 1) {
+      dispatch(unitActions.setActualUnit());
+    }
+    if (props.id === 2) {
+      dispatch(unitActions.setActualUnit2());
+    }
+    setActualUnit(props.id);
   };
 
   return (
     <Pressable
       style={[
         styles.button,
-        props.id === props.actualOption ? styles.buttonActive : null,
+        props.id === actualOptionUnit ? styles.buttonActive : null,
       ]}
       onPress={onPressButtonHandler}
     >
-      {props.buttonType === "unit" ? null : (
-        <View style={styles.imgContainer}>
-          {props.id === 1 ? (
-            <Image style={styles.img} source={theardInside} />
-          ) : (
-            <Image style={styles.img} source={theardOutside} />
-          )}
-        </View>
-      )}
       <Text style={styles.buttonText}>{props.title}</Text>
     </Pressable>
   );
@@ -43,19 +46,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    width: "50%",
   },
   buttonActive: {
     backgroundColor: "#1B84E6",
   },
-  imgContainer: {
-    width: "30%",
-    alignItems: "flex-start",
-  },
-  img: {
-    width: "80%",
-    height: "80%",
-  },
 });
 
-export default TheardsButton;
+export default TheardsButtonForUnit;

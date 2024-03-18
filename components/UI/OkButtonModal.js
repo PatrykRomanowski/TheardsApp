@@ -1,33 +1,16 @@
 import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text, Image } from "react-native";
 
-const theardInside = require("../../assets/T1.png");
-const theardOutside = require("../../assets/T2.png");
-
-const TheardsButton = (props) => {
-  const onPressButtonHandler = () => {
-    props.onPress(props.id);
-  };
-
+const OkButtonModal = (props) => {
   return (
-    <Pressable
+    <View
       style={[
         styles.button,
         props.id === props.actualOption ? styles.buttonActive : null,
       ]}
-      onPress={onPressButtonHandler}
     >
-      {props.buttonType === "unit" ? null : (
-        <View style={styles.imgContainer}>
-          {props.id === 1 ? (
-            <Image style={styles.img} source={theardInside} />
-          ) : (
-            <Image style={styles.img} source={theardOutside} />
-          )}
-        </View>
-      )}
       <Text style={styles.buttonText}>{props.title}</Text>
-    </Pressable>
+    </View>
   );
 };
 
@@ -35,7 +18,7 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     width: "47%",
-    height: "84%",
+    height: 50,
     borderRadius: 7,
     justifyContent: "center",
     alignItems: "center",
@@ -43,7 +26,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    width: "50%",
+    width: "100%",
+    textAlign: "center",
   },
   buttonActive: {
     backgroundColor: "#1B84E6",
@@ -58,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TheardsButton;
+export default OkButtonModal;

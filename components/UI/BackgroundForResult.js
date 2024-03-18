@@ -7,8 +7,6 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const BackgroundForResult = (props) => {
-  // console.log(props.data);
-  // console.log(props.index);
   return (
     <View style={styles.resultContainer}>
       <HoleDiameterText

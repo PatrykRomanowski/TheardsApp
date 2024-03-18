@@ -2,9 +2,6 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 const HoleDiameterText = (props) => {
-  console.log(props.data);
-  console.log(props.index);
-  console.log(props.unit);
   if (props.data.length === 0) {
     return;
   }

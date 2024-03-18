@@ -1,7 +1,9 @@
 import Theards from "../classes/theards";
 
 const theardsDataInsideForMetric = new Theards();
+const theardsDataInsideForInch = new Theards();
 const theardsDataOutsideForMetric = new Theards();
+const theardsDataOutsideForInch = new Theards();
 
 theardsDataInsideForMetric.addTheards("M");
 theardsDataInsideForMetric.addTheards("G");
@@ -31,4 +33,9 @@ theardsDataOutsideForMetric.addPitch("M", "M4", "1.5", 8.5, 8.35, 8.65);
 theardsDataOutsideForMetric.addPitch("G", "G1/8", "11W", 8.5, 8.35, 8.65);
 theardsDataOutsideForMetric.addPitch("MT", "M10", "1.5", 8.5, 8.35, 8.65);
 
-export { theardsDataInsideForMetric, theardsDataOutsideForMetric };
+export {
+    theardsDataInsideForMetric,
+    theardsDataOutsideForMetric,
+    theardsDataInsideForInch,
+    theardsDataOutsideForInch
+};
